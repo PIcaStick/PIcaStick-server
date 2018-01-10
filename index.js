@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const formidable = require('formidable');
 const util = require('util');
 const emitNewFile = require('./socket');
@@ -9,12 +8,6 @@ const app = express();
 app.use(express.static('public'));
 // TODO: whitelist for only uploaded files with prefix to ignore .gitgnore --'
 app.use('/upload', express.static('upload'));
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.use(bodyParser.json());
 
 app.post('/file-upload', (req, res) => {
   const form = new formidable.IncomingForm();
@@ -32,17 +25,6 @@ app.post('/file-upload', (req, res) => {
     emitNewFile(filePath);
     res.end(util.inspect({fields: fields, files: files}));
   });
-
-  return;
-
-  const { stuff } = req.body;
-  if (typeof stuff === 'string' && stuff) {
-    console.log(`Upload: ${stuff}`);
-    res.send('ok!');
-  }
-  else {
-    res.status(400).send('bad bad BAAAD!');
-  }
 });
 
 app.listen(3000, () => {
