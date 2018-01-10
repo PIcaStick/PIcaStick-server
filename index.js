@@ -7,6 +7,8 @@ const emitNewFile = require('./socket');
 const app = express();
 
 app.use(express.static('public'));
+// TODO: whitelist for only uploaded files with prefix to ignore .gitgnore --'
+app.use('/upload', express.static('upload'));
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
