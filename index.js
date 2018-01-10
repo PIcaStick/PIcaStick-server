@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const formidable = require('formidable');
 const util = require('util');
+const emitNewFile = require('./socket');
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.post('/file-upload', (req, res) => {
   form.parse(req, (err, fields, files) => {
     res.writeHead(200, {'content-type': 'text/plain'});
     res.write('received upload:\n\n');
+    const filePath = files.file.path;
+    emitNewFile(filePath);
     res.end(util.inspect({fields: fields, files: files}));
   });
 
