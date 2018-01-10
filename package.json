@@ -1,0 +1,23 @@
+{
+  "name": "picastick-server",
+  "version": "0.0.1",
+  "description": "PIcaStick server to relay data flow between android client and tv client",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PIcaStick/PIcaStick-server.git"
+  },
+  "author": "TaKaQod",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PIcaStick/PIcaStick-server/issues"
+  },
+  "homepage": "https://github.com/PIcaStick/PIcaStick-server#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
