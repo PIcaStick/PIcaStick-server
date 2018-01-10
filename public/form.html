@@ -1,0 +1,25 @@
+<form name="fileUpload">
+  <input type="text" name="stuff">
+  <!-- <input type="file" name="file"> -->
+  <input type="submit">
+</form>
+
+<script type="text/javascript">
+  const fileUploadForm = document.forms.fileUpload;
+  fileUploadForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const data = {
+      stuff: fileUploadForm.stuff.value
+    };
+    fetch('/file-upload', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({
+        'content-type': 'application/json'
+      })
+    })
+    .then(console.log)
+    .catch(console.log);
+  })
+</script>
