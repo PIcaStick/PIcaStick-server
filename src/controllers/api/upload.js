@@ -1,7 +1,7 @@
 const express = require('express');
 const formidable = require('formidable');
+
 const socketStorage = require('../../services/channel-push/socket-storage');
-const path = require('path');
 
 const router = express.Router();
 
@@ -17,9 +17,6 @@ router.post('/', (req, res) => {
   form.multiples = false;
 
   form.parse(req, (err, fields, files) => {
-    //const filePath = files.file.path;
-    //console.log(filePath);
-
     const socket = socketStorage.get(fields.token);
     if (!socket) {
       res.status(401)
@@ -27,9 +24,11 @@ router.post('/', (req, res) => {
       return;
     }
 
+    // TODO: Find a better solution for defining the mounted path
     const filePath = files.file.path.replace('\\', '/');
 
     const dataToSend = {
+      // TODO: Send only the file name or the mounted path and leave the front deal with the domain, port, etc.
       src: 'http://localhost:3000/' + filePath
     };
 

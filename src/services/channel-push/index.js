@@ -1,17 +1,18 @@
 const SocketServerIO = require( "socket.io" );
+const randomstring = require("randomstring");
+
 const socketStorage = require('./socket-storage');
 
-var randomstring = require("randomstring");
 
 module.exports = httpServer => {
   const io = new SocketServerIO(httpServer);
 
   io.on('connection', socket => {
-    let token = "";
+    let token;
     do {
       token = randomstring.generate({
         length: 7,
-        readable: true
+        readable: true,
       });
     } while(socketStorage.includes(token));
 
@@ -22,6 +23,6 @@ module.exports = httpServer => {
     socket.on('disconnect', () => {
       console.log(`Client leave : delete token '${token}'`);
       socketStorage.remove(token);
-    })
+    });
   });
 }

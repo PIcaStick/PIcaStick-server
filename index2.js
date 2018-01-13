@@ -1,15 +1,16 @@
-var express = require('express');
-const mainRouter = require('./src/controllers');
+const express = require('express');
+const http = require('http');
 
+const mainRouter = require('./src/controllers');
 const initChannelPush = require('./src/services/channel-push');
 
-var app = express();
-var http = require( "http" ).createServer( app );
+const app = express();
+const httpServer = http.createServer(app);
 
 app.use(express.static('public'));
 app.use('/uploaded-files', express.static('uploaded-files'));
 
 app.use(mainRouter);
 
-initChannelPush(http);
-http.listen(3000);
+initChannelPush(httpServer);
+httpServer.listen(3000);
