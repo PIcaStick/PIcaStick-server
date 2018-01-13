@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <style>
+        div.container img{ max-width: 100vw; max-height: 100vh; margin-top: 50vh; transform: translateY(-50%); }
+        div.container { height: 100vh; width:100vw; text-align: center; }
+        body{ margin: 0; overflow-y: hidden; overflow-x: hidden; }
+    </style>
+</head>
+<body>
+    <div id="img" class="container">
+    </div>
+    <script>
+        $(function (){
+            var socket = io.connect('ws://localhost:3000');
+            var divimg = $('#img');
+
+            socket.on('updateImage', function (data){
+                divimg.empty();
+                var img = $('<img>', {
+                    src: data.src,
+                    alt: "picture"
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
