@@ -7,7 +7,7 @@ var app = express();
 var http = require( "http" ).createServer( app );
 
 app.use(express.static('public'));
-app.use(express.static('uploaded-files'));
+app.use('/uploaded-files', express.static('uploaded-files'));
 
 app.use(mainRouter);
 
