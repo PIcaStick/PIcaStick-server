@@ -24,12 +24,13 @@ router.post('/', (req, res) => {
     if (!socket) {
       res.status(401)
         .send('bullshit');
+      return;
     }
 
-    const filePath = files.file.path;
+    const filePath = files.file.path.replace('\\', '/');
 
     const dataToSend = {
-      src: path.join('localhost:3000', filePath)
+      src: 'localhost:3000/' + filePath
     };
 
     // TODO: change event name to kebab case
