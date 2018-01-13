@@ -34,6 +34,7 @@ router.post('/', (req, res) => {
       path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
     };
 
+    // TODO: encapsulate the emission into specifics methods well defined (keep all eventName in the same place with the data emission format)
     socket.emit('new-image', dataToSend);
 
     res.send("Upload file received!");

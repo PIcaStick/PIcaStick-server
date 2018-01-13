@@ -3,7 +3,7 @@ const randomstring = require("randomstring");
 
 const socketStorage = require('./socket-storage');
 
-module.exports = httpServer => {
+function init(httpServer) {
   const io = new SocketServerIO(httpServer);
 
   io.on('connection', socket => {
@@ -25,3 +25,7 @@ module.exports = httpServer => {
     });
   });
 }
+
+module.exports = {
+  init,
+};

@@ -3,7 +3,7 @@ const http = require('http');
 const config = require('./config.json');
 
 const mainRouter = require('./src/controllers');
-const initChannelPush = require('./src/services/channel-push');
+const channelPush = require('./src/services/channel-push');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -15,5 +15,5 @@ app.use(`/${uploadedFilesConf['mounting-path']}`, express.static(uploadedFilesCo
 
 app.use(mainRouter);
 
-initChannelPush(httpServer);
+channelPush.init(httpServer);
 httpServer.listen(3000);
