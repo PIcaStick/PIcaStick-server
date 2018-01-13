@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
     const filePath = files.file.path.replace('\\', '/');
 
     const dataToSend = {
-      src: 'localhost:3000/' + filePath
+      src: 'http://localhost:3000/' + filePath
     };
 
     // TODO: change event name to kebab case
