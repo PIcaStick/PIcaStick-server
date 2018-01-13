@@ -17,6 +17,8 @@ var tmpdir = './upload/';
 
 app.use ('/fileUploaded', express.static(tmpdir));
 
+app.use(express.static('public'));
+
 app.use(mainRouter);
 
 app.post('/upload', (req, res) => {
