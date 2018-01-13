@@ -1,5 +1,6 @@
 const express = require('express');
 const formidable = require('formidable');
+const socketStorage = require('../../services/channel-push/socket-storage');
 
 const router = express.Router();
 
@@ -14,13 +15,21 @@ router.post('/', (req, res) => {
   form.multiples = false;
 
   form.parse(req, (err, fields, files) => {
-    const filePath = files.file.path;
-    console.log(filePath);
-    // TODO: Emit the new path of uploaded file
+    //const filePath = files.file.path;
+    //console.log(filePath);
 
-    res.set({
-      'Content-Type': 'text/plain'
-    });
+    const socket = socketStorage.get(fields.token);
+    if (!socket) {
+      res.status(401)
+        .send('bullshit');
+    }
+
+    const dataToSend = {
+      src: fields.url,
+    };
+    // TODO: change event name to kebab case
+    socket.emit('updateImage', dataToSend);
+
     res.send("Upload file received!");
   });
 });
