@@ -6,10 +6,8 @@ const initChannelPush = require('./src/services/channel-push');
 var app = express();
 var http = require( "http" ).createServer( app );
 
-var tmpdir = './upload/';
-
 app.use(express.static('public'));
-app.use('/fileUploaded', express.static(tmpdir));
+app.use(express.static('uploaded-files'));
 
 app.use(mainRouter);
 
