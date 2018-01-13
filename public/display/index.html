@@ -15,19 +15,22 @@
     <div id="img" class="container">
     </div>
     <script>
-        $(function (){
-            var socket = io.connect('ws://localhost:3000');
-            var divimg = $('#img');
+        const host = 'localhost';
+        const port = 3000;
+        const authority = `${host}:${port}`
 
-            socket.on('updateImage', function (data){
+        $(() => {
+            const socket = io.connect(`ws://${authority}`);
+            const divimg = $('#img');
+
+            socket.on('new-image', data => {
                 divimg.empty();
-                var img = $('<img>', {
-                    src: data.src,
-                    alt: "picture"
+                const img = $('<img>', {
+                    src: `http://${authority}/${data.path}`,
+                    alt: "picture",
                 });
                 divimg.append(img);
             });
-
         });
     </script>
 </body>

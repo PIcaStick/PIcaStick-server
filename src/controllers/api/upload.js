@@ -29,16 +29,12 @@ router.post('/', (req, res) => {
     // Replace backslash to slash because 'formidable' and 'windows'
     const defaultFilePath = files.file.path.replace('\\', '/');
     const fileName = defaultFilePath.split('/').pop();
-    
-    const filePath = `${uploadedFilesConf['mounting-path']}/${fileName}`;
 
     const dataToSend = {
-      // TODO: Send only the file name or the mounted path and leave the front deal with the domain, port, etc.
-      src: 'http://localhost:3000/' + filePath
+      path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
     };
 
-    // TODO: change event name to kebab case
-    socket.emit('updateImage', dataToSend);
+    socket.emit('new-image', dataToSend);
 
     res.send("Upload file received!");
   });
