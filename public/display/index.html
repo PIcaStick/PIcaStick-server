@@ -12,6 +12,10 @@
     </style>
 </head>
 <body>
+    <div id="identification">
+        <span>Token</span>
+        <span class="token-holder"></span>
+    </div>
     <div id="img" class="container">
     </div>
     <script>
@@ -21,15 +25,19 @@
 
         $(() => {
             const socket = io.connect(`ws://${authority}`);
-            const divimg = $('#img');
+            const $imgContainer = $('#img');
+            const $token = $('#identification .token-holder').first();
+
+            socket.on('token-assignment', data => {
+                $token.text(data.token);
+            });
 
             socket.on('new-image', data => {
-                divimg.empty();
                 const img = $('<img>', {
                     src: `http://${authority}/${data.path}`,
                     alt: "picture",
                 });
-                divimg.append(img);
+                $imgContainer.empty().append(img);
             });
         });
     </script>

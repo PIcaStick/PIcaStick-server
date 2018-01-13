@@ -19,6 +19,11 @@ function init(httpServer) {
 
     console.log(`New client connection with the token '${token}'`);
 
+    const dataToSend = {
+      token,
+    };
+    socket.emit('token-assignment', dataToSend);
+
     socket.on('disconnect', () => {
       console.log(`Client leave : delete token '${token}'`);
       socketStorage.remove(token);
