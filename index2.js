@@ -9,11 +9,15 @@ var randomstring = require("randomstring");
 var fs = require('fs');
 var path = require('path');
 
+const mainRouter = require('./src/controllers');
+
 let sockets = {};
 
 var tmpdir = './upload/';
 
 app.use ('/fileUploaded', express.static(tmpdir));
+
+app.use(mainRouter);
 
 app.post('/upload', (req, res) => {
 
