@@ -1,5 +1,6 @@
 const express = require('express');
 const formidable = require('formidable');
+const config = require('../../../config.json');
 
 const socketStorage = require('../../services/channel-push/socket-storage');
 
@@ -7,10 +8,11 @@ const router = express.Router();
 
 const maxPhotoSizeMB = 2;
 
+const uploadedFilesConf = config['uploaded-files'];
+
 router.post('/', (req, res) => {
   const form = new formidable.IncomingForm();
-  // TODO: create a config for this dir (same in the index for mounting the static ressources service)
-  form.uploadDir = "./uploaded-files";
+  form.uploadDir = uploadedFilesConf['folder'];
   form.keepExtensions = true;
   form.type = 'multipart';
   form.maxFieldsSize = maxPhotoSizeMB * 1024 * 1024;
@@ -24,8 +26,11 @@ router.post('/', (req, res) => {
       return;
     }
 
-    // TODO: Find a better solution for defining the mounted path
-    const filePath = files.file.path.replace('\\', '/');
+    // Replace backslash to slash because 'formidable' and 'windows'
+    const defaultFilePath = files.file.path.replace('\\', '/');
+    const fileName = defaultFilePath.split('/').pop();
+    
+    const filePath = `${uploadedFilesConf['mounting-path']}/${fileName}`;
 
     const dataToSend = {
       // TODO: Send only the file name or the mounted path and leave the front deal with the domain, port, etc.
