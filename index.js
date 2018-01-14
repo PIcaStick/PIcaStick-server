@@ -4,6 +4,7 @@ const config = require('./config.json');
 
 const mainRouter = require('./src/controllers');
 const channelPush = require('./src/services/channel-push');
+const clearUploadedFiles = require('./src/services/upload-management/clear-files');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -15,8 +16,13 @@ app.use(`/${uploadedFilesConf['mounting-path']}`, express.static(uploadedFilesCo
 
 app.use(mainRouter);
 
-// TODO-REFACTO: Empty the upload directory when the server start
 // TODO-DEBUG: Add a debug config with a permanent debug token not removed
 
 channelPush.init(httpServer);
-httpServer.listen(3000);
+
+console.log('clearing uploaded files...')
+clearUploadedFiles()
+  .then(() => {
+    httpServer.listen(3000);
+  })
+  .catch(console.error);
