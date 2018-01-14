@@ -28,16 +28,22 @@ router.post('/', (req, res) => {
 
     // Replace backslash to slash because 'formidable' and 'windows'
     const defaultFilePath = files.file.path.replace('\\', '/');
+
+    const re = /^.*_([A-Za-z0-9]+)\.jpg$/i;
+    const imageHash = defaultFilePath.match(re).pop();
+
     const fileName = defaultFilePath.split('/').pop();
 
     const dataToSend = {
       path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
     };
 
-    // TODO: encapsulate the emission into specifics methods well defined (keep all eventName in the same place with the data emission format)
+    // TODO-REFACTO: encapsulate the emission into specifics methods well defined (keep all eventName in the same place with the data emission format)
     socket.emit('new-image', dataToSend);
 
-    res.send("Upload file received!");
+    res.json({
+      hash: imageHash,
+    });
   });
 });
 
