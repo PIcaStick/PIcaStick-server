@@ -1,11 +1,9 @@
-const ImagesController = require('./images-controller');
-
 class UserStorage {
   constructor(token) {
     this.token = token;
     // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
     this.socket = null;
-    this.imageController = new ImagesController;
+    this.images = new Map();
   }
 }
 

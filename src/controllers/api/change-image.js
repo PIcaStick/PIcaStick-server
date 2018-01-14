@@ -1,7 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const config = require('../../../config.json');
+// TODO-REFACTO: To delete
+const usersStorage = require('../../services/users-storage');
 
+// TODO-REFACTO: To delete
 const socketStorage = require('../../services/channel-push/socket-storage');
 
 const router = express.Router();
@@ -12,11 +15,14 @@ const uploadedFilesConf = config['uploaded-files'];
 // => or create a subdirectory for each user token to delete after each session
 
 router.post('/', (req, res) => {
-  const { userStorage } = req.custom;
+  //const { userStorage } = req.custom;
+
   const { hash } = req.body;
   //const { token } = userStorage;
   // TODO-REFACTO: Delete this and access it directly from the header when the front is ready
   const { token } = req.body;
+  // TODO-REFACTO: To delete
+  const userStorage = usersStorage.get(token);
 
   // TODO-REFACTO: Access the socket from the userstorage
   const socket = socketStorage.get(token);
@@ -28,43 +34,26 @@ router.post('/', (req, res) => {
     return;
   }
 
-  (new Promise((resolve, reject) => {
-    fs.readdir(uploadedFilesConf['folder'], (err, files) => {
-      if (err) reject({
-        status: 500,
-        message: "Internal error",
-        errorMessage: err,
-      });
-      else resolve(files);
-    });
-  }))
-  .then(files => {
-    const file = files.find(file => file.includes(hash));
+  const image = userStorage.images.get(hash);
 
-    if (!file) {
-      throw {
-        status: 400,
-        message: `The hash requested '${hash}' doesn't have a image file associated for the user corresponding to the token '${token}'`,
-        errorMessage: null,
-      }
-    }
-    return file;
-  })
-  .then(fileName => {
-    const dataToSend = {
-      path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
-    };
+  if (!image) {
+    const errorMessage = `The hash requested '${hash}' doesn't have a image file associated for the user corresponding to the token '${token}'`;
+    console.error(errorMessage);
+    res.status(400)
+      .send(errorMessage)
+    return;
+  }
 
-    // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
-    socket.emit('change-image', dataToSend);
+  const { mountingPath } = image;
 
-    res.send();
-  })
-  .catch(({ status, message, errorMessage }) => {
-    console.error(errorMessage || message);
-    res.status(status)
-      .send(message);
-  });
+  const dataToSend = {
+    path: mountingPath,
+  };
+
+  // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
+  socket.emit('change-image', dataToSend);
+
+  res.send();
 });
 
 module.exports = router;
