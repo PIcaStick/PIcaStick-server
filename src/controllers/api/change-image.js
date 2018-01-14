@@ -1,15 +1,8 @@
 const express = require('express');
-const fs = require('fs');
-const config = require('../../../config.json');
 // TODO-REFACTO: To delete
 const usersStorage = require('../../services/users-storage');
 
 const router = express.Router();
-
-const uploadedFilesConf = config['uploaded-files'];
-
-// TODO-REFACTO: Store the hash with file path on the server associated with the user token for security reason, for checking only in the user images list and not retrieve those of other users
-// => or create a subdirectory for each user token to delete after each session
 
 router.post('/', (req, res) => {
   //const { userStorage } = req.custom;
