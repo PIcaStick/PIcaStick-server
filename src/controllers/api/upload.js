@@ -11,6 +11,9 @@ const maxPhotoSizeMB = 2;
 const uploadedFilesConf = config['uploaded-files'];
 
 router.post('/', (req, res) => {
+  const { userStorage } = req.custom;
+  //const { token } = userStorage;
+
   const form = new formidable.IncomingForm();
   form.uploadDir = uploadedFilesConf['folder'];
   form.keepExtensions = true;
@@ -19,7 +22,11 @@ router.post('/', (req, res) => {
   form.multiples = false;
 
   form.parse(req, (err, fields, files) => {
-    const socket = socketStorage.get(fields.token);
+    // TODO-REFACTO: Delete this and access it directly from the header when the front is ready
+    const token = fields.token;
+    // TODO-REFACTO: Access the socket from the userstorage
+    const socket = socketStorage.get(token);
+    // TODO-SECURITY: Delete this when the security middleware is terminated
     if (!socket) {
       res.status(401)
         .send('bullshit');
@@ -38,7 +45,7 @@ router.post('/', (req, res) => {
       path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
     };
 
-    // TODO-REFACTO: encapsulate the emission into specifics methods well defined (keep all eventName in the same place with the data emission format)
+    // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
     socket.emit('new-image', dataToSend);
 
     res.json({

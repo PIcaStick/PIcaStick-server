@@ -1,6 +1,7 @@
 const SocketServerIO = require( "socket.io" );
 const randomstring = require("randomstring");
 
+const usersStorage = require('../users-storage');
 const socketStorage = require('./socket-storage');
 
 function init(httpServer) {
@@ -15,6 +16,10 @@ function init(httpServer) {
       });
     } while(socketStorage.includes(token));
 
+    const userStorage = usersStorage.add(token);
+    userStorage.socket = socket;
+
+    // TODO: Remove this specific storage
     socketStorage.add(token, socket);
 
     console.log(`New client connection with the token '${token}'`);

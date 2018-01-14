@@ -12,10 +12,16 @@ const uploadedFilesConf = config['uploaded-files'];
 // => or create a subdirectory for each user token to delete after each session
 
 router.post('/', (req, res) => {
-  // TODO-REFACTO: Define a middleware to automatically check if user can access the route and give the socket and hash to the controller
-  // TODO-REFACTO: Define the token into the header or whatever (outside the body, uniformly for all http method)
-  const { token, hash } = req.body;
+  const { userStorage } = req.custom;
+  const { hash } = req.body;
+  //const { token } = userStorage;
+  // TODO-REFACTO: Delete this and access it directly from the header when the front is ready
+  const { token } = req.body;
+
+  // TODO-REFACTO: Access the socket from the userstorage
   const socket = socketStorage.get(token);
+
+  // TODO-SECURITY: Delete this when the security middleware is terminated
   if (!socket) {
     res.status(401)
       .send('bullshit');
@@ -48,7 +54,8 @@ router.post('/', (req, res) => {
     const dataToSend = {
       path: `${uploadedFilesConf['mounting-path']}/${fileName}`,
     };
-  
+
+    // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
     socket.emit('change-image', dataToSend);
 
     res.send();

@@ -13,6 +13,8 @@ router.use((req, res, next) => {
   const token = req.headers['custom-token'];
   const userStorage = usersStorage.get(token);
 
+  // TODO-SECURITY: Response with 401 if userStorage not found when the front is ready
+
   req.custom = {
     userStorage,
   };
