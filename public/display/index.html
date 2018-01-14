@@ -32,13 +32,16 @@
                 $token.text(data.token);
             });
 
-            socket.on('new-image', data => {
+            socket.on('new-image', updateImage);
+            socket.on('change-image', updateImage);
+            
+            function updateImage(data) {
                 const img = $('<img>', {
                     src: `http://${authority}/${data.path}`,
                     alt: "picture",
                 });
                 $imgContainer.empty().append(img);
-            });
+            }
         });
     </script>
 </body>
