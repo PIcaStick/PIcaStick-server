@@ -15,5 +15,8 @@ app.use(`/${uploadedFilesConf['mounting-path']}`, express.static(uploadedFilesCo
 
 app.use(mainRouter);
 
+// TODO-REFACTO: Empty the upload directory when the server start
+// TODO-DEBUG: Add a debug config with a permanent debug token not removed
+
 channelPush.init(httpServer);
 httpServer.listen(3000);
