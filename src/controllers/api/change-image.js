@@ -4,9 +4,6 @@ const config = require('../../../config.json');
 // TODO-REFACTO: To delete
 const usersStorage = require('../../services/users-storage');
 
-// TODO-REFACTO: To delete
-const socketStorage = require('../../services/channel-push/socket-storage');
-
 const router = express.Router();
 
 const uploadedFilesConf = config['uploaded-files'];
@@ -24,15 +21,14 @@ router.post('/', (req, res) => {
   // TODO-REFACTO: To delete
   const userStorage = usersStorage.get(token);
 
-  // TODO-REFACTO: Access the socket from the userstorage
-  const socket = socketStorage.get(token);
-
   // TODO-SECURITY: Delete this when the security middleware is terminated
-  if (!socket) {
+  if (!userStorage) {
     res.status(401)
       .send('bullshit');
     return;
   }
+
+  const socket = userStorage.socket;
 
   const image = userStorage.images.get(hash);
 

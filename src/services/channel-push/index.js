@@ -2,7 +2,6 @@ const SocketServerIO = require( "socket.io" );
 const randomstring = require("randomstring");
 
 const usersStorage = require('../users-storage');
-const socketStorage = require('./socket-storage');
 
 function init(httpServer) {
   const io = new SocketServerIO(httpServer);
@@ -14,15 +13,12 @@ function init(httpServer) {
         length: 7,
         readable: true,
       });
-    } while(socketStorage.includes(token));
+    } while(usersStorage.includes(token));
+
+    console.log(`New client connection with the token '${token}'`);
 
     const userStorage = usersStorage.add(token);
     userStorage.socket = socket;
-
-    // TODO: Remove this specific storage
-    socketStorage.add(token, socket);
-
-    console.log(`New client connection with the token '${token}'`);
 
     const dataToSend = {
       token,
@@ -31,7 +27,7 @@ function init(httpServer) {
 
     socket.on('disconnect', () => {
       console.log(`Client leave : delete token '${token}'`);
-      socketStorage.remove(token);
+      usersStorage.remove(token);
     });
   });
 }

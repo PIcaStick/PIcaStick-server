@@ -27,7 +27,7 @@ class UsersStorage {
   }
 
   includes(token) {
-    return this.get(user) && true || false;
+    return this.get(token) && true || false;
   }
 
   remove(token) {
