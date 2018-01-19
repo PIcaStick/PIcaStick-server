@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
     // Replace backslash to slash because 'formidable' and 'windows'
     const defaultFilePath = files.file.path.replace('\\', '/');
 
-    const re = /^.*_([A-Za-z0-9]+)\.jpg$/i;
+    const re = /^.*_([A-Za-z0-9]+)\.[A-Za-z0-9]*$/i;
     const imageHash = defaultFilePath.match(re).pop();
 
     const fileName = defaultFilePath.split('/').pop();
@@ -58,7 +58,8 @@ router.post('/', (req, res) => {
     socket.emit('new-image', dataToSend);
 
     res.json({
-      hash: imageHash,
+      imageHash: imageHash,
+      filePath: mountingPath
     });
   });
 });
