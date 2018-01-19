@@ -42,7 +42,9 @@ router.post('/', (req, res) => {
   // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
   socket.emit('change-image', dataToSend);
 
-  res.send();
+  res.send({
+    found: true
+  });
 });
 
 module.exports = router;

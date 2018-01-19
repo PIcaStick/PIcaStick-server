@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const config = require('./config.json');
+const bodyParser = require('body-parser')
 
 const mainRouter = require('./src/controllers');
 const channelPush = require('./src/services/channel-push');
@@ -13,6 +14,8 @@ app.use(express.static('public'));
 
 const uploadedFilesConf = config['uploaded-files'];
 app.use(`/${uploadedFilesConf['mounting-path']}`, express.static(uploadedFilesConf['folder']));
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(mainRouter);
 

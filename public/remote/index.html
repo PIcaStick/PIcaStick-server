@@ -1,14 +1,131 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Upload file</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha256-5+02zu5UULQkO7w1GIr6vftCgMfFdZcAHeDtFnKZsBs=" crossorigin="anonymous"></script>
+  <style>
+    .ligne {
+      height: 100px;
+    }
+
+    .pictureMax {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .cell {
+      display: table-cell;
+    }
+
+    .pointer {
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
-  <form method="post" enctype="multipart/form-data" action="/api/upload">
-    <input type="file" name="file">
-    <input type="text" name="token">
-    <input type="submit">
-  </form>
+  <div class="container">
+
+    <div class="row">
+      <div class="mx-auto">
+        <h1>Upload Your Pictures</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <form id="tokenForm">
+        <div class="form-group">
+          <label for="tokenInput">Enter the token display on the display: </label>
+          <input type="text" class="form-control" id="tokenInput" placeholder="Enter Token">
+        </div>
+        <button type="submit" class="btn btn-primary">Save token</button>
+      </form>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <form id="pictureForm" style="Display: none;">
+          <div class="form-group">
+            <label for="pictureInput">Select the picture to Display</label>
+            <input type="file" class="form-control-file" id="pictureInput" accept="image/*" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Send picture</button>
+        </form>
+      </div>
+      <div class="col-md-6" id="pictureDisplay">
+      </div>
+    </div>
+  </div>
+  <script>
+    var token;
+
+    function sendTokenForm() {
+      $("#tokenForm").hide();
+      $("#pictureForm").show();
+      token = $("#tokenInput").val();
+      return false;
+    }
+
+    function sendPictureForm() {
+
+      var formData = new FormData(document.getElementById("pictureForm"));
+      formData.append("token", token);
+      $.ajax({
+        url: "/api/upload",
+        method: "POST",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: uploadSuccess,
+        error: (data) => {
+          console.error(data);
+        }
+      })
+      return false;
+    }
+
+    function uploadSuccess(data) {
+      var ligne = $("<div>", {
+        class: "row ligne pointer"
+      });
+      var picture = $("<div>", {
+        class: "col-4 ligne text-center align-middle"
+      }).append($("<img>", {
+        src: "/" + data.filePath,
+        alt: data.imageHash,
+        class: "pictureMax"
+      }));
+      var hash = $("<div>", {
+        class: "col-8 ligne cell align-middle"
+      }).append($("<div>").html(data.imageHash));
+
+      ligne.append(picture, hash)
+      ligne.click(sendHash(data.imageHash))
+      $("#pictureDisplay").prepend(ligne);
+    }
+
+    function sendHash(hash) {
+      return () => {
+        $.ajax({
+          url: "/api/change-image",
+          method: "POST",
+          data: {
+            token: token,
+            hash: hash
+          }
+        });
+      };
+    }
+
+    $(function() {
+      $("#tokenForm").submit(sendTokenForm);
+      $("#pictureForm").submit(sendPictureForm);
+    });
+  </script>
 </body>
+
 </html>
