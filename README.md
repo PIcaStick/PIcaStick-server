@@ -1,3 +1,3 @@
 # PIcaStick-server
 
-Stop read me, i'm shy!
+The relay server, acting as an intermediary between any type of client application (android remote and TV display for now).
