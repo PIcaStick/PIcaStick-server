@@ -39,8 +39,9 @@ router.post('/', (req, res) => {
     const dataToSend = {
       path: mountingPath,
     };
+
     // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
-    socket.emit('new-image', dataToSend);
+    socket.emit('change-image', dataToSend);
 
     res.json({
       imageHash: imageHash,

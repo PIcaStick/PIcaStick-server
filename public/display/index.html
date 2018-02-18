@@ -32,7 +32,6 @@
                 $token.text(data.token);
             });
 
-            socket.on('new-image', updateImage);
             socket.on('change-image', updateImage);
             
             function updateImage(data) {
