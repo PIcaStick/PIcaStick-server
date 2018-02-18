@@ -79,6 +79,9 @@
         method: "POST",
         processData: false,
         contentType: false,
+        headers: {
+          'picastick-token': token,
+        },
         data: formData,
         success: uploadSuccess,
         error: (data) => {
@@ -113,6 +116,9 @@
         $.ajax({
           url: "/api/change-image",
           method: "POST",
+          headers: {
+            'picastick-token': token,
+          },
           data: {
             token: token,
             hash: hash
