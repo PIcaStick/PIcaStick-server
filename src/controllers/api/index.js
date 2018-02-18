@@ -10,10 +10,14 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 router.use((req, res, next) => {
-  const token = req.headers['custom-token'];
+  const token = req.headers['picastick-token'];
   const userStorage = usersStorage.get(token);
 
-  // TODO-SECURITY: Response with 401 if userStorage not found when the front is ready
+  if (!userStorage) {
+    res.status(401)
+      .send('bullshit');
+    return;
+  }
 
   req.custom = {
     userStorage,

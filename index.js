@@ -19,8 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(mainRouter);
 
-// TODO-DEBUG: Add a debug config with a permanent debug token not removed
-
 channelPush.init(httpServer);
 
 console.log('clearing uploaded files...')
