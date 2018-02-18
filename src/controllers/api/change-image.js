@@ -14,13 +14,6 @@ router.post('/', (req, res) => {
   // TODO-REFACTO: To delete
   const userStorage = usersStorage.get(token);
 
-  // TODO-SECURITY: Delete this when the security middleware is terminated
-  if (!userStorage) {
-    res.status(401)
-      .send('bullshit');
-    return;
-  }
-
   const socket = userStorage.socket;
 
   const image = userStorage.images.get(hash);

@@ -27,13 +27,6 @@ router.post('/', (req, res) => {
     // TODO-REFACTO: Delete when ready
     const userStorage = usersStorage.get(token);
 
-    // TODO-SECURITY: Delete this when the security middleware is terminated
-    if (!userStorage) {
-      res.status(401)
-        .send('bullshit');
-      return;
-    }
-
     const { socket } = userStorage;
 
     // Replace backslash to slash because 'formidable' and 'windows'
