@@ -1,8 +1,6 @@
 const express = require('express');
 const formidable = require('formidable');
 const config = require('../../../config.json');
-// TODO-REFACTO: To delete
-const usersStorage = require('../../services/users-storage');
 
 const router = express.Router();
 
@@ -11,8 +9,7 @@ const maxPhotoSizeMB = 2;
 const uploadedFilesConf = config['uploaded-files'];
 
 router.post('/', (req, res) => {
-  //const { userStorage } = req.custom;
-  //const { token } = userStorage;
+  const { userStorage } = req.custom;
 
   const form = new formidable.IncomingForm();
   form.uploadDir = uploadedFilesConf['folder'];
@@ -22,11 +19,6 @@ router.post('/', (req, res) => {
   form.multiples = false;
 
   form.parse(req, (err, fields, files) => {
-    // TODO-REFACTO: Delete this and access it directly from the header when the front is ready
-    const token = fields.token;
-    // TODO-REFACTO: Delete when ready
-    const userStorage = usersStorage.get(token);
-
     const { socket } = userStorage;
 
     // Replace backslash to slash because 'formidable' and 'windows'

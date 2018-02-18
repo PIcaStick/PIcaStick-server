@@ -1,20 +1,12 @@
 const express = require('express');
-// TODO-REFACTO: To delete
-const usersStorage = require('../../services/users-storage');
 
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  //const { userStorage } = req.custom;
+  const { userStorage } = req.custom;
+  const { token } = userStorage;
 
   const { hash } = req.body;
-  //const { token } = userStorage;
-  // TODO-REFACTO: Delete this and access it directly from the header when the front is ready
-  const { token } = req.body;
-  // TODO-REFACTO: To delete
-  const userStorage = usersStorage.get(token);
-
-  const socket = userStorage.socket;
 
   const image = userStorage.images.get(hash);
 
@@ -32,6 +24,7 @@ router.post('/', (req, res) => {
     path: mountingPath,
   };
 
+  const socket = userStorage.socket;
   // TODO-REFACTO: Create a utility to avoid manipulating directly the socket object
   socket.emit('change-image', dataToSend);
 

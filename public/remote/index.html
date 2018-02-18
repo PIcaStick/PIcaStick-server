@@ -71,9 +71,8 @@
     }
 
     function sendPictureForm() {
-
       var formData = new FormData(document.getElementById("pictureForm"));
-      formData.append("token", token);
+
       $.ajax({
         url: "/api/upload",
         method: "POST",
